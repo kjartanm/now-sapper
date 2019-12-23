@@ -23,7 +23,8 @@ exports.build = async ({
   const mountpoint = getMountPoint(entrypoint)
   const entrypointDir = path.join(workPath, mountpoint)
   await download(files, workPath, meta)
-
+  console.log("dirs", mountpoint, entrypointDir, workPath)
+  //guidebook /Users/kmuller/Documents/GitHub/modbooks/guidebook /Users/kmuller/Documents/GitHub/modbooks
   process.chdir(entrypointDir)
 
   const config = getConfig(rawConfig)
@@ -32,13 +33,12 @@ exports.build = async ({
     null,
     config
   )
-  const appDir = (config.appDir)?config.appDir + '/': '';
+  //const appDir = (config.appDir)?config.appDir + '/': '';
   const spawnOpts = getSpawnOptions(meta, nodeVersion)
   const prodDependencies = await npmBuild(config, entrypointDir, spawnOpts, meta)
-  console.log("apprid", appDir);
   const launcherFiles = getLauncherFiles(mountpoint)
-  const staticFiles = await globAndPrefix(entrypointDir, appDir + 'static')
-  const applicationFiles = await globAndPrefix(entrypointDir, appDir + '__sapper__')
+  const staticFiles = await globAndPrefix(entrypointDir, 'static')
+  const applicationFiles = await globAndPrefix(entrypointDir, '__sapper__')
 
   // Use the system-installed version of `node` when running via `now dev`
   const runtime = meta.isDev ? 'nodejs' : nodeVersion.runtime
@@ -58,9 +58,9 @@ exports.build = async ({
   })
 
   const output = {
-    ...serve(staticFiles, appDir + 'static/', ''),
-    ...serve(applicationFiles, appDir + '__sapper__/build/service-worker.js', 'service-worker.js'),
-    ...serve(applicationFiles, appDir + '__sapper__/build/client', 'client'),
+    ...serve(staticFiles, 'static/', ''),
+    ...serve(applicationFiles, '__sapper__/build/service-worker.js', 'service-worker.js'),
+    ...serve(applicationFiles, '__sapper__/build/client', 'client'),
     index: lambda
   }
 
@@ -76,7 +76,7 @@ exports.build = async ({
       continue: true
     },
     { handle: 'filesystem' },
-    { src: '/(.*)', dest: '/' }
+    { src: '/(.*)', dest: '/'}
   ]
 
   return { output, routes }
