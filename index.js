@@ -32,12 +32,13 @@ exports.build = async ({
     null,
     config
   )
+  const appDir = (config.appDir)?config.appDir + '/': '';
   const spawnOpts = getSpawnOptions(meta, nodeVersion)
   const prodDependencies = await npmBuild(config, entrypointDir, spawnOpts, meta)
-
+  console.log("apprid", appDir);
   const launcherFiles = getLauncherFiles(mountpoint)
-  const staticFiles = await globAndPrefix(entrypointDir, 'static')
-  const applicationFiles = await globAndPrefix(entrypointDir, '__sapper__')
+  const staticFiles = await globAndPrefix(entrypointDir, appDir + 'static')
+  const applicationFiles = await globAndPrefix(entrypointDir, appDir + '__sapper__')
 
   // Use the system-installed version of `node` when running via `now dev`
   const runtime = meta.isDev ? 'nodejs' : nodeVersion.runtime
@@ -57,9 +58,9 @@ exports.build = async ({
   })
 
   const output = {
-    ...serve(staticFiles, 'static/', ''),
-    ...serve(applicationFiles, '__sapper__/build/service-worker.js', 'service-worker.js'),
-    ...serve(applicationFiles, '__sapper__/build/client', 'client'),
+    ...serve(staticFiles, appDir + 'static/', ''),
+    ...serve(applicationFiles, appDir + '__sapper__/build/service-worker.js', 'service-worker.js'),
+    ...serve(applicationFiles, appDir + '__sapper__/build/client', 'client'),
     index: lambda
   }
 
