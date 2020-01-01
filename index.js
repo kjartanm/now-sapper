@@ -23,8 +23,6 @@ exports.build = async ({
   const mountpoint = getMountPoint(entrypoint)
   const entrypointDir = path.join(workPath, mountpoint)
   await download(files, workPath, meta)
-  console.log("dirs", mountpoint, entrypointDir, workPath)
-  //guidebook /Users/kmuller/Documents/GitHub/modbooks/guidebook /Users/kmuller/Documents/GitHub/modbooks
   process.chdir(entrypointDir)
 
   const config = getConfig(rawConfig)
@@ -33,7 +31,7 @@ exports.build = async ({
     null,
     config
   )
-  //const appDir = (config.appDir)?config.appDir + '/': '';
+  const appRoute = (config.appRoute)?config.appRoute + '/': '';
   const spawnOpts = getSpawnOptions(meta, nodeVersion)
   const prodDependencies = await npmBuild(config, entrypointDir, spawnOpts, meta)
   const launcherFiles = getLauncherFiles(mountpoint)
@@ -64,19 +62,20 @@ exports.build = async ({
     index: lambda
   }
 
+
   const routes = [
     {
-      src: '/client/.+\\.(css|js|map)',
+      src: appRoute + '/client/.+\\.(css|js|map)',
       headers: { 'cache-control': 'public,max-age=31536000,immutable' },
       continue: true
     },
     {
-      src: '/service-worker.js',
+      src: appRoute + '/service-worker.js',
       headers: { 'cache-control': 'public,max-age=0,must-revalidate' },
       continue: true
     },
     { handle: 'filesystem' },
-    { src: '/(.*)', dest: '/'}
+    { src: appRoute + '/(.*)', dest: '/'}
   ]
 
   return { output, routes }
