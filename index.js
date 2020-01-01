@@ -79,7 +79,7 @@ exports.build = async ({
   ]
   console.log("routes", routes);
   console.log("lambda", lambda);
-  return { output, routes }
+  return { output, routes: [] }
 }
 
 function serve(arr, filePath, routePath) {
