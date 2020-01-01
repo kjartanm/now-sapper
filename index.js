@@ -74,7 +74,7 @@ exports.build = async ({
       headers: { 'cache-control': 'public,max-age=0,must-revalidate' },
       continue: true
     },
-    { handle: 'filesystem' },
+    //{ handle: 'filesystem' },
     { src: appRoute + '/(.*)', dest: '/'}
   ]
 console.log("routes", routes);
