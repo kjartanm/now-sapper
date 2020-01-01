@@ -23,7 +23,7 @@ exports.build = async ({
   const mountpoint = getMountPoint(entrypoint)
   const entrypointDir = path.join(workPath, mountpoint)
   await download(files, workPath, meta)
-  process.chdir(entrypointDir)
+  //process.chdir(entrypointDir)
 
   const config = getConfig(rawConfig)
   const nodeVersion = await getNodeVersion(
