@@ -77,7 +77,7 @@ exports.build = async ({
     { handle: 'filesystem' },
     { src: appRoute + '/(.*)', dest: '/'}
   ]
-
+console.log("routes", routes);
   return { output, routes }
 }
 
