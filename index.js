@@ -31,7 +31,7 @@ exports.build = async ({
     null,
     config
   )
-  const appRoute = (config.appRoute)?config.appRoute: '';
+  const appRoute = '';//(config.appRoute)?config.appRoute: '';
   const spawnOpts = getSpawnOptions(meta, nodeVersion)
   const prodDependencies = await npmBuild(config, entrypointDir, spawnOpts, meta)
   const launcherFiles = getLauncherFiles(mountpoint)
@@ -56,10 +56,10 @@ exports.build = async ({
   })
 
   const output = {
-    ...serve(staticFiles, 'static/', 'juba'),
-    ...serve(applicationFiles, '__sapper__/build/service-worker.js', 'service-worker.js'),
-    ...serve(applicationFiles, '__sapper__/build/client', 'client'),
-    index: lambda
+    ...serve(staticFiles, 'static/', 'juba/'),
+    ...serve(applicationFiles, '__sapper__/build/service-worker.js', 'juba/service-worker.js'),
+    ...serve(applicationFiles, '__sapper__/build/client', 'juba/client'),
+    ['juba/index']: lambda
   }
 
 
@@ -75,7 +75,7 @@ exports.build = async ({
       continue: true
     },
     //{ handle: 'filesystem' },
-    { src: appRoute + '/(.*)', dest: '/'}
+    { src: appRoute + '/(.*)', dest: '/juba'}
   ]
   console.log("routes", routes);
   console.log("lambda", lambda);
