@@ -31,7 +31,7 @@ exports.build = async ({
     null,
     config
   )
-  const appRoute = '';//(config.appRoute)?config.appRoute: '';
+  const appRoute = '/juba';//(config.appRoute)?config.appRoute: '';
   const spawnOpts = getSpawnOptions(meta, nodeVersion)
   const prodDependencies = await npmBuild(config, entrypointDir, spawnOpts, meta)
   const launcherFiles = getLauncherFiles(mountpoint)
