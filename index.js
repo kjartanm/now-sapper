@@ -23,7 +23,6 @@ exports.build = async ({
   const mountpoint = getMountPoint(entrypoint)
   const entrypointDir = path.join(workPath, mountpoint)
   await download(files, workPath, meta)
-  //process.chdir(entrypointDir)
 
   const config = getConfig(rawConfig)
   const nodeVersion = await getNodeVersion(
@@ -31,7 +30,7 @@ exports.build = async ({
     null,
     config
   )
-  const appRoute = '/juba';//(config.appRoute)?config.appRoute: '';
+  const distDir = (config.distDir)?'./' + config.distDir + '/': './';
   const spawnOpts = getSpawnOptions(meta, nodeVersion)
   const prodDependencies = await npmBuild(config, entrypointDir, spawnOpts, meta)
   const launcherFiles = getLauncherFiles(mountpoint)
@@ -56,26 +55,26 @@ exports.build = async ({
   })
 
   const output = {
-    ...serve(staticFiles, 'static/', 'juba/'),
-    ...serve(applicationFiles, '__sapper__/build/service-worker.js', 'juba/service-worker.js'),
-    ...serve(applicationFiles, '__sapper__/build/client', 'juba/client'),
-    ['juba/index']: lambda
+    ...serve(staticFiles, 'static/', distDir),
+    ...serve(applicationFiles, '__sapper__/build/service-worker.js', distDir + 'service-worker.js'),
+    ...serve(applicationFiles, '__sapper__/build/client', distDir + 'client'),
+    [distDir + 'index']: lambda
   }
 
 
   const routes = [
     {
-      src: appRoute + '/client/.+\\.(css|js|map)',
+      src: distDir + 'client/.+\\.(css|js|map)',
       headers: { 'cache-control': 'public,max-age=31536000,immutable' },
       continue: true
     },
     {
-      src: appRoute + '/service-worker.js',
+      src: distDir + 'service-worker.js',
       headers: { 'cache-control': 'public,max-age=0,must-revalidate' },
       continue: true
     },
-    //{ handle: 'filesystem' },
-    { src: appRoute + '/(.*)', dest: '/juba'}
+    { handle: 'filesystem' },
+    { src: distDir + '(.*)', dest: distDir}
   ]
   console.log("routes", routes);
   console.log("lambda", lambda);
