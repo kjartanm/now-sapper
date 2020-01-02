@@ -30,7 +30,7 @@ exports.build = async ({
     null,
     config
   )
-  const distDir = (config.distDir)?'./' + config.distDir + '/': './';
+  const distDir = (config.distDir)?config.distDir + '/': '';
   const spawnOpts = getSpawnOptions(meta, nodeVersion)
   const prodDependencies = await npmBuild(config, entrypointDir, spawnOpts, meta)
   const launcherFiles = getLauncherFiles(mountpoint)
@@ -64,17 +64,17 @@ exports.build = async ({
 
   const routes = [
     {
-      src: distDir + 'client/.+\\.(css|js|map)',
+      src: '/' + distDir + 'client/.+\\.(css|js|map)',
       headers: { 'cache-control': 'public,max-age=31536000,immutable' },
       continue: true
     },
     {
-      src: distDir + 'service-worker.js',
+      src: '/' + distDir + 'service-worker.js',
       headers: { 'cache-control': 'public,max-age=0,must-revalidate' },
       continue: true
     },
     { handle: 'filesystem' },
-    { src: distDir + '(.*)', dest: distDir}
+    { src: '/' + distDir + '(.*)', dest: '/' + distDir}
   ]
   console.log("routes", routes);
   console.log("lambda", lambda);
