@@ -31,8 +31,6 @@ exports.build = async ({
     config
   )
 
-  console.log("entrypointDir", entrypointDir)
-  console.log("mountpoint", mountpoint)
   const distDir = (config.distDir)?config.distDir + '/': '';
   const spawnOpts = getSpawnOptions(meta, nodeVersion)
   const prodDependencies = await npmBuild(config, entrypointDir, spawnOpts, meta)
@@ -64,7 +62,6 @@ exports.build = async ({
     [distDir + 'index']: lambda
   }
 
-
   const routes = [
     {
       src: '/' + distDir + 'client/.+\\.(css|js|map)',
@@ -79,9 +76,7 @@ exports.build = async ({
     { handle: 'filesystem' },
     { src: '/' + distDir + '(.*)', dest: '/' + distDir}
   ]
-  console.log("routes", routes);
-  console.log("lambda", lambda);
-  return { output, routes: [] }
+  return { output, routes: (distDir !== '')?[]:routes }
 }
 
 function serve(arr, filePath, routePath) {
