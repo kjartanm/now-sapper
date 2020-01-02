@@ -36,7 +36,6 @@ exports.build = async ({
   const distDir = (config.distDir)?config.distDir + '/': '';
   const spawnOpts = getSpawnOptions(meta, nodeVersion)
   const prodDependencies = await npmBuild(config, entrypointDir, spawnOpts, meta)
-  console.log("prodDependencies", prodDependencies)
   const launcherFiles = getLauncherFiles(entrypointDir)
   const staticFiles = await globAndPrefix(entrypointDir, 'static')
   const applicationFiles = await globAndPrefix(entrypointDir, '__sapper__')
